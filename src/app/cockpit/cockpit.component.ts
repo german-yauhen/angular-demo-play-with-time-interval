@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { NumberEvent, NumberType } from '../model/number-event';
 
@@ -9,34 +9,49 @@ import { NumberEvent, NumberType } from '../model/number-event';
 })
 export class CockpitComponent implements OnInit {
 
-  private static INTERVAL: number = 1000; // means 1 second
+  private interval: number = 1000; // means 1 second
+  private intervalFunc;
+  private isPaused: boolean = false;
+  private value: number = 0;
 
-  numberEvent: EventEmitter<NumberEvent> = new EventEmitter<NumberEvent>();
+  @Output()
+  evenNumberEvent: EventEmitter<NumberEvent> = new EventEmitter<NumberEvent>();
+
+  @Output()
+  oddNumberEvent: EventEmitter<NumberEvent> = new EventEmitter<NumberEvent>();
 
   private timeoutFunc;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
   }
 
   onStartEmitNumbers(): void {
-    let value: number = 0;
     this.timeoutFunc = setInterval(() => {
-      const numberEvent: NumberEvent = this.createNumberEvent(++value);
-      this.numberEvent.emit(numberEvent);
-    }, CockpitComponent.INTERVAL);
+      const newValue = ++this.value;
+      const numberType: NumberType = newValue % 2 == 0 ? NumberType.EVEN : NumberType.ODD;
+      const numberEvent: NumberEvent = new NumberEvent(newValue, numberType, `${newValue} is ${numberType}`);
+      this.emitNumberEvent(numberEvent);
+    }, this.interval);
   }
 
   onStopEmitNumbers(): void {
-    if(this.timeoutFunc) {
+    if (this.timeoutFunc) {
       clearInterval(this.timeoutFunc);
     }
   }
 
-  createNumberEvent(number: number): NumberEvent {
-    const numberType: NumberType = number % 2 == 0 ? NumberType.EVEN : NumberType.ODD;
-    return new NumberEvent(number, numberType, `${number} is ${numberType}`);
+  private emitNumberEvent(numberEvent: NumberEvent): void {
+    if (NumberType.EVEN === numberEvent.type) {
+      console.log(`Content: ${numberEvent.content}`);
+      this.evenNumberEvent.emit(numberEvent);
+    } else if (NumberType.ODD === numberEvent.type) {
+      console.log(`Content: ${numberEvent.content}`);
+      this.oddNumberEvent.emit(numberEvent);
+    } else {
+      console.warn('A peculiar number!')
+    }
   }
 
 }

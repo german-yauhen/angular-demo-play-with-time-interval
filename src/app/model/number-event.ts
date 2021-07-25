@@ -1,5 +1,5 @@
 export class NumberEvent {
-  constructor(number: number, type: NumberType, content: string) {}
+  constructor(public number: number, public type: NumberType, public content: string) {}
 }
 
 export enum NumberType {
