@@ -3,5 +3,5 @@ export class NumberEvent {
 }
 
 export enum NumberType {
-  EVEN, ODD
+  EVEN  = 'even', ODD = 'odd'
 }

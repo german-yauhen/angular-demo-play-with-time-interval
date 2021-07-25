@@ -17,26 +17,23 @@
 </div>
 
 <div class="container">
-
   <hr>
-
   <div class="row">
     <div class="col-xs-12">
-      <app-game-control></app-game-control>
-      <hr>
+      <app-game-control (oddNumberEvent)="onOddNumberEmmited($event)" (evenNumberEvent)="onEvenNumberEmmited($event)"></app-game-control>
     </div>
   </div>
-
+  <hr>
   <div class="row">
     <div class="col-xs-12">
-      <app-even></app-even>
-      <hr>
-    </div>
-    
-    <div class="col-xs-12">
-      <app-odd></app-odd>
-      <hr>
+      <app-odd *ngFor="let oddNumberEvent of oddNumberEvents" [oddNumberEvent]="oddNumberEvent"></app-odd>
     </div>
   </div>
-
+  <hr>
+  <div class="row">
+    <div class="col-xs-12">
+      <app-even *ngFor="let evenNumberEvent of evenNumberEvents" [evenNumberEvent]="evenNumberEvent"></app-even>
+    </div>
+  </div>
+  <hr>
 </div>
